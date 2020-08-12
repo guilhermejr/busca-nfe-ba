@@ -1,0 +1,27 @@
+{
+    "name": "guilhermejr/busca-nfe-ba",
+    "description": "Busca informações da NFE do estado da Bahia",
+    "homepage": "https://github.com/guilhermejr/busca-nfe-ba",
+    "type": "library",
+    "require": {
+        "php": "^7.4",
+        "symfony/browser-kit": "^5.1",
+        "symfony/http-client": "^5.1",
+        "symfony/dom-crawler": "^5.1",
+        "symfony/mime": "^5.1",
+        "symfony/css-selector": "^5.1"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Guilherme Jr.",
+            "email": "falecom@guilhermejr.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "BuscaNFEBa\\" : "src/"
+        }
+    },
+    "bin": ["buscar-nfe-ba"]
+}

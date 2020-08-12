@@ -1,0 +1,45 @@
+#!/usr/bin/env php
+<?php
+
+// --- Mensagem de erro parâmetros ---
+function mensagemErroParametros($argv) 
+{
+    echo PHP_EOL;
+    echo "Uso: ". $argv[0] ." [formato] [qr-code]" . PHP_EOL . PHP_EOL;
+    echo "formato          Poder ser json ou array" . PHP_EOL;
+    echo "qr-code          Deve ser a url do qr-code da NFE" . PHP_EOL . PHP_EOL;
+    echo "Exemplo: ". $argv[0] ." array \"http://nfe.sefaz.ba.gov.br/servicos/nfce/qrcode.aspx?p=29200802212937002876650010000030141807750555%7C2%7C1%7C1%7C42CB8C73ADF2B18BFC6F786F9E7551CDD7B762B4\"" . PHP_EOL;
+    echo PHP_EOL;
+    exit();
+}
+
+// --- Verifica se o ambiente que está rodando é o cli ---
+if (PHP_SAPI !== "cli") {
+    echo "Aviso: Este script deve ser rodado a via console." . PHP_EOL;
+}
+
+// --- Verifica se a quantidade de argumentos está correta ---
+if ($argc != 3) {
+    mensagemErroParametros($argv);
+}
+
+// --- Verifica se o primeiro parâmetro é válido ---
+if ($argv[1] != "array" && $argv[1] != "json") {
+    mensagemErroParametros($argv);
+}
+
+// --- Verifica de url é válida ---
+if (!filter_var($argv[2], FILTER_VALIDATE_URL, FILTER_FLAG_QUERY_REQUIRED)) {
+    mensagemErroParametros($argv);
+} 
+
+require 'vendor/autoload.php';
+
+use BuscaNFEBa\Buscador;
+
+$buscador = new Buscador($argv[2]);
+if ($argv[1] == "json") {
+    print_r($buscador->getJSON(true));
+} else {
+    print_r($buscador->getArray());
+}
