@@ -54,7 +54,7 @@ class Buscador
         if ($cli) {
             return json_encode($this->getArray(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         } else {
-            return json_encode($this->getArray());
+            return json_encode($this->getArray(), JSON_UNESCAPED_SLASHES);
         }
     }
 
