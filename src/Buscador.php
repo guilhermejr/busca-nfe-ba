@@ -65,9 +65,10 @@ class Buscador
         $retorno = [];
         $retorno['url'] = $this->url;
         $retorno['dataCompra'] = $this->getDataCompra();
+        $retorno['total'] = $this->getTotal();
         $retorno['cnpj'] = $this->getCNPJLoja();
         $retorno['ie'] = $this->getIELoja();
-        $retorno['nomeFantasia'] = $this->getNomeFantasia();
+        $retorno['nome'] = $this->getNome();
         $retorno['chaveDeAcesso'] = $this->getChaveDeAcesso();
         $retorno['informacoesComplementares'] = $this->getInformacoesComplementares();
         $retorno['produtos'] = $this->getProdutos();
@@ -81,6 +82,11 @@ class Buscador
         return substr($this->crawlerAbas->filter('#NFe')->filter('.col-6')->eq(0)->filter('span')->eq(3)->html(), 0, -6);
     }
 
+    private function getTotal() : string
+    {
+        return $this->crawlerAbas->filter('#NFe')->filter('.col-6')->eq(0)->filter('span')->eq(5)->html();
+    }
+
     private function getCNPJLoja() : string
     {
         return $this->crawlerAbas->filter('.fixo-nfe-cpf-cnpj')->filter('span')->html();
@@ -91,9 +97,13 @@ class Buscador
         return $this->crawlerAbas->filter('.fixo-nfe-iest')->filter('span')->html();
     }
 
-    private function getNomeFantasia() : string 
+    private function getNome() : string 
     {
-        return $this->crawlerEmitente->filter('#Emitente')->filter('.col-2')->eq(0)->filter('span')->eq(1)->html();
+        $nome = $this->crawlerEmitente->filter('#Emitente')->filter('.col-2')->eq(0)->filter('span')->eq(1)->html();
+        if (!$nome) {
+            $nome = $this->crawlerEmitente->filter('#Emitente')->filter('.col-2')->eq(0)->filter('span')->eq(0)->html();
+        }
+        return $nome;
     }
 
     private function getChaveDeAcesso() : string
