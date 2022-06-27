@@ -65,8 +65,8 @@ class Buscador
         $retorno = [];
         $retorno['url'] = $this->url;
         $retorno['dataCompra'] = $this->getDataCompra();
-        $retorno['CNPJLoja'] = $this->getCNPJLoja();
-        $retorno['IELoja'] = $this->getIELoja();
+        $retorno['cnpj'] = $this->getCNPJLoja();
+        $retorno['ie'] = $this->getIELoja();
         $retorno['nomeFantasia'] = $this->getNomeFantasia();
         $retorno['chaveDeAcesso'] = $this->getChaveDeAcesso();
         $retorno['informacoesComplementares'] = $this->getInformacoesComplementares();
