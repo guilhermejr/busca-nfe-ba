@@ -64,7 +64,7 @@ class Buscador
 
         $retorno = [];
         $retorno['url'] = $this->url;
-        $retorno['dataCompra'] = $this->getDataCompra();
+        $retorno['data'] = $this->getData();
         $retorno['total'] = $this->getTotal();
         $retorno['cnpj'] = $this->getCNPJLoja();
         $retorno['ie'] = $this->getIELoja();
@@ -77,7 +77,7 @@ class Buscador
 
     }
 
-    private function getDataCompra() : string
+    private function getData() : string
     {
         return substr($this->crawlerAbas->filter('#NFe')->filter('.col-6')->eq(0)->filter('span')->eq(3)->html(), 0, -6);
     }
