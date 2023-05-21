@@ -4,12 +4,13 @@ namespace BuscaNFEBa;
 
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\DomCrawler\Crawler;
 
 class Buscador
 {
 
     private $url;
+    private $retornou;
+    private $mensagem;
     private $crawlerPrincipal;
     private $crawlerAbas;
     private $crawlerEmitente;
@@ -22,11 +23,28 @@ class Buscador
         // --- URL da NFE ---
         $this->url = $url;
 
+        // --- Inicialização ---
+        $this->inicializacao();
+
+    }
+
+    // --- Inicialização ------------------------------------------------------
+    private function inicializacao() {
+
         // --- Inicia browser ---
         $browser = new HttpBrowser(HttpClient::create());
 
         // --- Pega o html da NFE ---
-        $this->crawlerPrincipal = $browser->request('GET', $url);
+        $this->crawlerPrincipal = $browser->request('GET', $this->url);
+
+        // --- Verifica se tem um retorno válido ---
+        try {
+            $this->retornou = false;
+            $this->mensagem = $this->crawlerPrincipal->filter('#lblInformacao')->html();
+            return;
+        } catch (\InvalidArgumentException $th) {
+            $this->retornou = true;
+        }
 
         // --- Clica em Visualizar em Abas ---
         $formPrincipal = $this->crawlerPrincipal->selectButton('Visualizar em Abas')->form();
@@ -63,15 +81,21 @@ class Buscador
     {
 
         $retorno = [];
+        $retorno['retornou'] = $this->retornou ? 'true' : 'false';
         $retorno['url'] = $this->url;
-        $retorno['data'] = $this->getData();
-        $retorno['total'] = $this->getTotal();
-        $retorno['cnpj'] = $this->getCNPJLoja();
-        $retorno['ie'] = $this->getIELoja();
-        $retorno['nome'] = $this->getNome();
-        $retorno['chaveDeAcesso'] = $this->getChaveDeAcesso();
-        $retorno['informacoesComplementares'] = $this->getInformacoesComplementares();
-        $retorno['produtos'] = $this->getProdutos();
+
+        if ($this->retornou) {    
+            $retorno['data'] = $this->getData();
+            $retorno['total'] = $this->getTotal();
+            $retorno['cnpj'] = $this->getCNPJLoja();
+            $retorno['ie'] = $this->getIELoja();
+            $retorno['nome'] = $this->getNome();
+            $retorno['chaveDeAcesso'] = $this->getChaveDeAcesso();
+            $retorno['informacoesComplementares'] = $this->getInformacoesComplementares();
+            $retorno['produtos'] = $this->getProdutos();
+        } else {
+            $retorno['mensagem'] = $this->mensagem;
+        }
 
         return $retorno;
 
